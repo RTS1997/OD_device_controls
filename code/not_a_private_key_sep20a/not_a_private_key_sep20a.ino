@@ -15,8 +15,8 @@ void loop() {
   // put your main code here, to run repeatedly:
   
   sensorvalue = analogRead(readoutIN);
-  delay(5);
+  delay(100);
 
   Serial.print(sensorvalue);
-  Serial.print("\n newline");
+  Serial.print("\n");
 }
