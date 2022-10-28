@@ -5,6 +5,7 @@ import numpy as np
 import random
 import serial
 import datetime
+import time
 
 now = datetime.datetime.now()
 
@@ -12,29 +13,32 @@ now = datetime.datetime.now()
 ser = serial.Serial()
 ser.port = '/dev/ttyACM0' #Arduino serial port
 ser.baudrate = 9600
-ser.timeout = 10 #specify timeout when using readline()
+ser.timeout = 1 #specify timeout when using readline()
 ser.open()
 if ser.is_open==True:
 	print("\nAll right, serial port now open. Configuration:\n")
 	print(ser, "\n") #print serial parameters
 
+
+
 # Create figure for plotting
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
-xs = [] 
+xs = []
 ys = []
 
 def animate(i, xs, ys, now):
 
     #Aquire and parse data from serial port
-    line=ser.readline()      #ascii
-    line_as_list = line.split(b',')
-    i = int(line_as_list[0])
-	
+    line=ser.readline().decode('utf-8').rstrip()      #ascii
+    time.sleep(0.05)
+    print(line)
+    i = line
+
 	# Add x and y to lists
     ys.append(i)
     new_time = datetime.datetime.now()
-    print((new_time - now).total_seconds())
+    # print((new_time - now).total_seconds())
     xs.append((new_time - now).total_seconds())
 
     # Draw x and y lists
