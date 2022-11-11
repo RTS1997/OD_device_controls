@@ -7,7 +7,7 @@ def call_serial():
         ser = serial.Serial(port='/dev/ttyACM0', baudrate=9600, timeout=1)
     except:
         try:
-            ser = serial.Serial(port='COM4', baudrate=9600, timeout=1)
+            ser = serial.Serial(port='COM9', baudrate=9600, timeout=1)
         except:
             print("No serial port found")
 
