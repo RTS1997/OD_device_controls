@@ -65,7 +65,7 @@ def run_calibration(number_of_ODs=1, cdt=10):
                 time.sleep(1)
                 start_time = time.time()
                 while time.time() < start_time+cdt:
-                    line_values.append(ser.readline().decode('utf-8').rstrip())
+                    line_values.append(float(ser.readline().decode('utf-8').rstrip()))
 
                 re.write(str(od_value)+','+str(mean(line_values))+str(stdev(line_values))+"\n")
                 print(mean(line_values))
