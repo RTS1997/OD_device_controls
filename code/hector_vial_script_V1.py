@@ -53,15 +53,15 @@ def run_calibration(number_of_ODs=1, cdt=10):
     ser = call_serial()
     line_values = []
 
-    with open('calibration_file.csv', 'a') as re:
+    with open('calibration_file.csv', 'w') as re:
         re.write('OD_values'+','+'mean_v'+','+'std_v'+"\n")
-        selector = input("Initiated calibration, y to start, n to abort:")
+        selector = input("Initiated calibration, y to start, n to abort: ")
         selector = str(selector).lower()
         if selector == 'y':
             for od in range(0, int(number_of_ODs)):
                 line_values = []
-                od_value = input("Enter OD value")
-                input("Enter anything once culture is replaced")
+                od_value = input("Enter OD value: ")
+                input("Press Enter once culture is replaced and flowing: ")
                 time.sleep(1)
                 start_time = time.time()
                 while time.time() < start_time+cdt:
