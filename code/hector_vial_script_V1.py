@@ -1,4 +1,7 @@
 import argparse
+import numpy as np
+import pandas as pd
+from scipy.stats import linregress
 import serial
 from statistics import mean
 from statistics import stdev
@@ -41,12 +44,26 @@ def run_measurements(dt):
     check_serial_connection(ser)
     create_results_file()
     start_time = time.time()
+    voltage_collection = []
     while time.time() < start_time+dt:
-        line = ser.readline().decode('utf-8').rstrip()
-        write_results(round(time.time()-start_time, 3), line)
-        print(line)
+        voltage_collection.append(ser.readline().decode('utf-8').rstrip())
+        if len(voltage_collection) >= 30:
+            measured_OD_val = convert_measurement_to_OD(np.mean(voltage_collection))
+
+            write_results(round(time.time()-start_time, 3), measured_OD_val)
+            voltage_collection = []
+            print(measured_OD_val)
 
     ser.close()
+
+def convert_measurement_to_OD(measured_voltage):
+    calibration_params = pd.read_csv('calibration_file.csv', sep=',')
+    slope, intercept, r, p, stderr = linregress(calibration_params['OD_values'], calibration_params['mean_v'])
+    fit_slope, fit_intercept = 1/slope, -intercept/slope
+
+    OD_value = fit_slope*measured_voltage+fit_intercept
+
+    return max(OD_value, 0.0001)
 
 def run_calibration(number_of_ODs=1, cdt=10):
     # Create calibration file
