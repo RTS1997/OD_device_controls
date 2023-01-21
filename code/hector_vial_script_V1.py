@@ -47,12 +47,11 @@ def run_measurements(dt):
     voltage_collection = []
     while time.time() < start_time+dt:
         voltage_collection.append(ser.readline().decode('utf-8').rstrip())
-        if len(voltage_collection) >= 30:
-            measured_OD_val = convert_measurement_to_OD(np.mean(voltage_collection))
+        measured_OD_val = convert_measurement_to_OD(voltage_collection)
 
-            write_results(round(time.time()-start_time, 3), measured_OD_val)
-            voltage_collection = []
-            print(measured_OD_val)
+        write_results(round(time.time()-start_time, 3), measured_OD_val)
+        voltage_collection = []
+        print(measured_OD_val)
 
     ser.close()
 
