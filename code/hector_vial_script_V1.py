@@ -1,5 +1,4 @@
 import argparse
-import numpy as np
 import pandas as pd
 from scipy.stats import linregress
 import serial
@@ -48,7 +47,7 @@ def run_measurements(dt):
     while time.time() < start_time+dt:
         voltage_collection.append(ser.readline().decode('utf-8').rstrip())
         if len(voltage_collection) >= 30:
-            measured_OD_val = convert_measurement_to_OD(np.mean(voltage_collection))
+            measured_OD_val = convert_measurement_to_OD(mean(voltage_collection))
 
             write_results(round(time.time()-start_time, 3), measured_OD_val)
             voltage_collection = []
