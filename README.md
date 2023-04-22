@@ -66,4 +66,5 @@ cd ~/<path in between>/OD_device_controls
 python3 hector_vial-script_V1.py --time_exp 1000
 ```
 
+
 `--time_exp` = Experimental time in seconds
