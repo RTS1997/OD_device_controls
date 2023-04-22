@@ -1,5 +1,4 @@
 import argparse
-import numpy as np
 import pandas as pd
 from scipy.stats import linregress
 import serial
@@ -24,20 +23,24 @@ def call_serial():
                     print("No serial port found")
     return ser
 
+
 def check_serial_connection(ser):
     assert ser.is_open==True, 'Serial port is not open'
     print("\nAll right, serial port now open. Configuration:\n")
     print(ser, "\n") #print serial parameters
+
 
 def create_results_file(file_name='results.csv'):
     columns = 'time'+','+'voltage'+"\n"
     with open(file_name, 'w') as re:
         re.write(columns)
 
+
 def write_results(time, line, file_name='results.csv'):
     write_input = str(time)+','+str(line)+"\n"
     with open(file_name, 'a') as re:
         re.write(write_input)
+
 
 def run_measurements(dt):
     ser = call_serial()
@@ -60,7 +63,7 @@ def convert_measurement_to_OD(measured_voltage):
     slope, intercept, r, p, stderr = linregress(calibration_params['OD_values'], calibration_params['mean_v'])
     fit_slope, fit_intercept = 1/slope, -intercept/slope
 
-    OD_value = fit_slope*measured_voltage+fit_intercept
+    OD_value = fit_slope*measured_voltage[-1]+fit_intercept
 
     return max(OD_value, 0.0001)
 
@@ -90,16 +93,12 @@ def run_calibration(number_of_ODs=1, cdt=10):
             print('Abort')
     return 'Calibration done'
 
-
-# def run_calibration():
-#     ser = call_serial()
-#     ser.close()
-
 # General python statement
 # This code allows the script to be used as the main program,
 # But also to be used as an import
 # If it is imported via another script, everything below the if statement
 # won't be executed and only the functions above can be used
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -139,12 +138,6 @@ if __name__ == '__main__':
     numOD = args.numOD
 
     if calibration_setting == 1:
-        run_calibration(number_of_ODs=numOD, cdt = calib_dt)
+        run_calibration(number_of_ODs=numOD, cdt=calib_dt)
     elif calibration_setting != 1:
         run_measurements(dt)
-
-
-
-
-
-
