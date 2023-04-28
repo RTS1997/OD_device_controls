@@ -27,17 +27,17 @@ def call_serial():
 def check_serial_connection(ser):
     assert ser.is_open==True, 'Serial port is not open'
     print("\nAll right, serial port now open. Configuration:\n")
-    print(ser, "\n") #print serial parameters
+    print(ser, "\n")  # print serial parameters
 
 
 def create_results_file(file_name='results.csv'):
-    columns = 'time'+','+'voltage'+"\n"
+    columns = 'time'+','+'voltage'+','+'estimated OD'+"\n"
     with open(file_name, 'w') as re:
         re.write(columns)
 
 
-def write_results(time, line, file_name='results.csv'):
-    write_input = str(time)+','+str(line)+"\n"
+def write_results(time, est_voltage, est_OD, file_name='results.csv'):
+    write_input = str(time)+','+str(est_voltage)+','+str(est_OD)+"\n"
     with open(file_name, 'a') as re:
         re.write(write_input)
 
@@ -50,22 +50,28 @@ def run_measurements(dt):
     voltage_collection = []
     while time.time() < start_time+dt:
         voltage_collection.append(ser.readline().decode('utf-8').rstrip())
+        print("Voltage collection", voltage_collection)
         measured_OD_val = convert_measurement_to_OD(voltage_collection)
 
-        write_results(round(time.time()-start_time, 3), measured_OD_val)
+        write_results(round(time.time()-start_time, 3),
+                      float(voltage_collection[-1]),
+                      measured_OD_val)
+
         voltage_collection = []
         print(measured_OD_val)
 
     ser.close()
 
+
 def convert_measurement_to_OD(measured_voltage):
     calibration_params = pd.read_csv('calibration_file.csv', sep=',')
     slope, intercept, r, p, stderr = linregress(calibration_params['OD_values'], calibration_params['mean_v'])
     fit_slope, fit_intercept = 1/slope, -intercept/slope
-
-    OD_value = fit_slope*measured_voltage[-1]+fit_intercept
+    print("measuredV", float(measured_voltage[-1]))
+    OD_value = fit_slope*float(measured_voltage[-1])+fit_intercept
 
     return max(OD_value, 0.0001)
+
 
 def run_calibration(number_of_ODs=1, cdt=10):
     # Create calibration file

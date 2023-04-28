@@ -4,6 +4,11 @@
 # OD_device_controls
 This code is used to control an OD measuring device connected to a computer via a "ArduinoMega R3 Board 2560". The OD measuring device is used to measure the bacterial density of a batch culture that feeds a mother machine.
 
+
+VIP: At the moment the serial port configuration is only tested for python version 3.9.7. Newer versions do not work at the moment.
+
+VIP: (To do) At the moment the output is still in bits, needs to be converted to voltage. E.g. divide 5/1023. For the calibration and the measurements.
+
 ## Installation
 
 To set this up you will need to connect your arduino to a serial port, names might change for windows/mac. For linux the port is typically: `/dev/ttyACM0` (could also be: `/dev/ttyACM1`). You may have to grant permission to this port:
@@ -26,13 +31,13 @@ To start the calibration enter the following commands:
 1. Navigate to the OD_device_controls folder
 
 ```
-cd ~/<path in between>/OD_device_controls
+cd ~/<path in between>/OD_device_controls/code
 ```
 
 2. Start the calibration function
 
 ```
-python3 hector_vial-script_V1.py --time_exp 100 --calibration 1 --interval 30 --numOD 10
+python3 hector_vial_script_V1.py --time_exp 100 --calibration 1 --interval 30 --numOD 10
 ```
 
 `--time_exp` = Total experiment duration, at the moment it is always
@@ -57,13 +62,13 @@ OD_values, mean_v, std_v
 1. Navigate to the OD_device_controls folder
 
 ```
-cd ~/<path in between>/OD_device_controls
+cd ~/<path in between>/OD_device_controls/code
 ```
 
 2. Start
 
 ```
-python3 hector_vial-script_V1.py --time_exp 1000
+python3 hector_vial_script_V1.py --time_exp 1000
 ```
 
 
